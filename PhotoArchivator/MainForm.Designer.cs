@@ -53,10 +53,13 @@
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.statusBar = new System.Windows.Forms.ToolStripStatusLabel();
             this.inputGroupBox.SuspendLayout();
             this.outputGroupBox.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.processGroupBox.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // inputGroupBox
@@ -101,10 +104,10 @@
             this.jpgRawButton.Checked = true;
             this.jpgRawButton.Location = new System.Drawing.Point(240, 45);
             this.jpgRawButton.Name = "jpgRawButton";
-            this.jpgRawButton.Size = new System.Drawing.Size(83, 17);
+            this.jpgRawButton.Size = new System.Drawing.Size(90, 17);
             this.jpgRawButton.TabIndex = 4;
             this.jpgRawButton.TabStop = true;
-            this.jpgRawButton.Text = "JPG + RAW";
+            this.jpgRawButton.Text = "JPEG + RAW";
             this.jpgRawButton.UseVisualStyleBackColor = true;
             // 
             // rawButton
@@ -191,100 +194,55 @@
             this.dir1Box.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dir1Box.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.dir1Box.FormattingEnabled = true;
-            this.dir1Box.Items.AddRange(new object[] {
-            "Не использовать",
-            "Дата: Год (YYYY)",
-            "Дата: Месяц (MM)",
-            "Дата: День (DD)",
-            "Дата: Год-Месяц (YYYY-MM)",
-            "Дата: Год-Месяц-День (YYYY-MM-DD)",
-            "Тип фотографии",
-            "Камера: Производитель",
-            "Камера: Модель"});
             this.dir1Box.Location = new System.Drawing.Point(3, 3);
             this.dir1Box.Name = "dir1Box";
             this.dir1Box.Size = new System.Drawing.Size(94, 21);
             this.dir1Box.TabIndex = 0;
+            this.dir1Box.SelectedIndexChanged += new System.EventHandler(this.OnStructureChanged);
             // 
             // dir2Box
             // 
             this.dir2Box.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dir2Box.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.dir2Box.FormattingEnabled = true;
-            this.dir2Box.Items.AddRange(new object[] {
-            "Не использовать",
-            "Дата: Год (YYYY)",
-            "Дата: Месяц (MM)",
-            "Дата: День (DD)",
-            "Дата: Год-Месяц (YYYY-MM)",
-            "Дата: Год-Месяц-День (YYYY-MM-DD)",
-            "Тип фотографии",
-            "Камера: Производитель",
-            "Камера: Модель"});
             this.dir2Box.Location = new System.Drawing.Point(103, 3);
             this.dir2Box.Name = "dir2Box";
             this.dir2Box.Size = new System.Drawing.Size(94, 21);
             this.dir2Box.TabIndex = 1;
+            this.dir2Box.SelectedIndexChanged += new System.EventHandler(this.OnStructureChanged);
             // 
             // dir3Box
             // 
             this.dir3Box.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dir3Box.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.dir3Box.FormattingEnabled = true;
-            this.dir3Box.Items.AddRange(new object[] {
-            "Не использовать",
-            "Дата: Год (YYYY)",
-            "Дата: Месяц (MM)",
-            "Дата: День (DD)",
-            "Дата: Год-Месяц (YYYY-MM)",
-            "Дата: Год-Месяц-День (YYYY-MM-DD)",
-            "Тип фотографии",
-            "Камера: Производитель",
-            "Камера: Модель"});
             this.dir3Box.Location = new System.Drawing.Point(203, 3);
             this.dir3Box.Name = "dir3Box";
             this.dir3Box.Size = new System.Drawing.Size(94, 21);
             this.dir3Box.TabIndex = 2;
+            this.dir3Box.SelectedIndexChanged += new System.EventHandler(this.OnStructureChanged);
             // 
             // dir4Box
             // 
             this.dir4Box.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dir4Box.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.dir4Box.FormattingEnabled = true;
-            this.dir4Box.Items.AddRange(new object[] {
-            "Не использовать",
-            "Дата: Год (YYYY)",
-            "Дата: Месяц (MM)",
-            "Дата: День (DD)",
-            "Дата: Год-Месяц (YYYY-MM)",
-            "Дата: Год-Месяц-День (YYYY-MM-DD)",
-            "Тип фотографии",
-            "Камера: Производитель",
-            "Камера: Модель"});
             this.dir4Box.Location = new System.Drawing.Point(303, 3);
             this.dir4Box.Name = "dir4Box";
             this.dir4Box.Size = new System.Drawing.Size(94, 21);
             this.dir4Box.TabIndex = 3;
+            this.dir4Box.SelectedIndexChanged += new System.EventHandler(this.OnStructureChanged);
             // 
             // dir5Box
             // 
             this.dir5Box.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dir5Box.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.dir5Box.FormattingEnabled = true;
-            this.dir5Box.Items.AddRange(new object[] {
-            "Не использовать",
-            "Дата: Год (YYYY)",
-            "Дата: Месяц (MM)",
-            "Дата: День (DD)",
-            "Дата: Год-Месяц (YYYY-MM)",
-            "Дата: Год-Месяц-День (YYYY-MM-DD)",
-            "Тип фотографии",
-            "Камера: Производитель",
-            "Камера: Модель"});
             this.dir5Box.Location = new System.Drawing.Point(403, 3);
             this.dir5Box.Name = "dir5Box";
             this.dir5Box.Size = new System.Drawing.Size(97, 21);
             this.dir5Box.TabIndex = 4;
+            this.dir5Box.SelectedIndexChanged += new System.EventHandler(this.OnStructureChanged);
             // 
             // label4
             // 
@@ -382,11 +340,30 @@
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusBar});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 433);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(543, 22);
+            this.statusStrip1.TabIndex = 3;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // statusBar
+            // 
+            this.statusBar.LinkColor = System.Drawing.Color.Yellow;
+            this.statusBar.Name = "statusBar";
+            this.statusBar.Size = new System.Drawing.Size(528, 17);
+            this.statusBar.Spring = true;
+            this.statusBar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(543, 455);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.processGroupBox);
             this.Controls.Add(this.outputGroupBox);
             this.Controls.Add(this.inputGroupBox);
@@ -399,7 +376,10 @@
             this.outputGroupBox.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.processGroupBox.ResumeLayout(false);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -430,6 +410,8 @@
         private System.Windows.Forms.ProgressBar progressBar;
         private System.ComponentModel.BackgroundWorker backgroundWorker;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel statusBar;
     }
 }
 

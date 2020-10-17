@@ -15,26 +15,64 @@ namespace PhotoArchivator
 {
     public partial class MainForm : Form
     {
+        private Dictionary<StructureItem, string> _structureItems = new Dictionary<StructureItem, string>() { 
+            {StructureItem.None, "Не использовать"},
+            {StructureItem.DateDay, "Дата: День (DD)"},
+            {StructureItem.DateMonth, "Дата: Месяц (MM)"},
+            {StructureItem.DateYear, "Дата: Год (YYYY)"},
+            {StructureItem.DateYM, "Дата: Год-Месяц (YYYY-MM)"},
+            {StructureItem.DateYMD, "Дата: Год-Месяц-День (YYYY-MM-DD)"},
+            {StructureItem.PhotoType, "Тип фотографии"},
+            {StructureItem.CameraCompany, "Камера: Производитель"},
+            {StructureItem.CameraModel, "Камера: Модель"},
+        };
         public MainForm()
         {
             InitializeComponent();
-            dir1Box.SelectedIndex = 
-                dir2Box.SelectedIndex = 
-                dir3Box.SelectedIndex = 
-                dir4Box.SelectedIndex = 
-                dir5Box.SelectedIndex = 0;
+            var structureItems = Enum.GetValues(typeof(StructureItem))
+                .OfType<StructureItem>()
+                .Select(s => _structureItems[s])
+                .ToArray();
+            var dirBoxes = tableLayoutPanel1.Controls.OfType<ComboBox>().ToArray();
+            foreach (var dirBox in dirBoxes) dirBox.Items.AddRange(structureItems);
+            foreach (var dirBox in dirBoxes) dirBox.SelectedIndex = 0;
+
             CheckStart();
+            CheckSctructure();
 
         }
+        private void CheckSctructure()
+        {
+            SetStructure(dir1Box, dir2Box);
+            SetStructure(dir2Box, dir3Box);
+            SetStructure(dir3Box, dir4Box);
+            SetStructure(dir4Box, dir5Box);
+
+            void SetStructure(ComboBox c1, ComboBox c2)
+            {
+                if (c1.SelectedIndex == 0)
+                {
+                    c2.Enabled = false;
+                    c2.SelectedIndex = 0;
+                }
+                else c2.Enabled = true;
+            }
+        }
+    
+        
 
         private void CheckStart()
         {
-            startButton.Enabled =
-                !string.IsNullOrEmpty(inputDirBox.Text) &&
-                !string.IsNullOrEmpty(outputDirBox.Text) &&
-                System.IO.Directory.Exists(inputDirBox.Text) &&
-                System.IO.Directory.Exists(outputDirBox.Text) &&
-                !outputDirBox.Text.TrimEnd('\\').Contains(inputDirBox.Text);
+            if (startButton.Enabled =
+            !string.IsNullOrEmpty(inputDirBox.Text) &&
+            !string.IsNullOrEmpty(outputDirBox.Text) &&
+            System.IO.Directory.Exists(inputDirBox.Text) &&
+            System.IO.Directory.Exists(outputDirBox.Text) &&
+            !outputDirBox.Text.TrimEnd('\\').Contains(inputDirBox.Text))
+            {
+                statusBar.Text = "";
+            }
+            else statusBar.Text = "Директории не указаны либо указаны не корректно";
         }
 
         private void startButton_Click(object sender, EventArgs e)
@@ -104,5 +142,15 @@ namespace PhotoArchivator
         {
             CheckStart();
         }
+
+        private void OnStructureChanged(object sender, EventArgs e)
+        {
+            CheckSctructure();
+        }
+    }
+
+    public enum StructureItem
+    {
+        None, DateYear, DateMonth, DateDay, DateYM, DateYMD, PhotoType, CameraCompany, CameraModel
     }
 }
