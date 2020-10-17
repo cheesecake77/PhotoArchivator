@@ -52,6 +52,7 @@
             this.startButton = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.inputGroupBox.SuspendLayout();
             this.outputGroupBox.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -135,6 +136,7 @@
             this.inputDirButton.TabIndex = 1;
             this.inputDirButton.Text = "...";
             this.inputDirButton.UseVisualStyleBackColor = true;
+            this.inputDirButton.Click += new System.EventHandler(this.inputDirButton_Click);
             // 
             // inputDirBox
             // 
@@ -144,6 +146,7 @@
             this.inputDirBox.Name = "inputDirBox";
             this.inputDirBox.Size = new System.Drawing.Size(359, 20);
             this.inputDirBox.TabIndex = 0;
+            this.inputDirBox.TextChanged += new System.EventHandler(this.OnDirChanged);
             // 
             // outputGroupBox
             // 
@@ -309,6 +312,7 @@
             this.outputDirBox.Name = "outputDirBox";
             this.outputDirBox.Size = new System.Drawing.Size(359, 20);
             this.outputDirBox.TabIndex = 7;
+            this.outputDirBox.TextChanged += new System.EventHandler(this.OnDirChanged);
             // 
             // outputDirButton
             // 
@@ -319,6 +323,7 @@
             this.outputDirButton.TabIndex = 8;
             this.outputDirButton.Text = "...";
             this.outputDirButton.UseVisualStyleBackColor = true;
+            this.outputDirButton.Click += new System.EventHandler(this.outputDirButton_Click);
             // 
             // processGroupBox
             // 
@@ -424,6 +429,7 @@
         private System.Windows.Forms.Button startButton;
         private System.Windows.Forms.ProgressBar progressBar;
         private System.ComponentModel.BackgroundWorker backgroundWorker;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
     }
 }
 
