@@ -287,7 +287,6 @@
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(503, 12);
             this.progressBar.TabIndex = 0;
-            this.progressBar.Value = 50;
             // 
             // startButton
             // 
