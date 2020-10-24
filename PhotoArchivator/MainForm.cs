@@ -15,7 +15,9 @@ namespace PhotoArchivator
 {
     public partial class MainForm : Form
     {
-        private Dictionary<StructureItem, string> _structureItems = new Dictionary<StructureItem, string>() { 
+        private String[] PhotoFiles = { "jpeg", "jpg", "arw", "dng", "nef", "crw", "cr2", "cr3" };
+
+        private Dictionary<StructureItem, string> _structureItems = new Dictionary<StructureItem, string>() {
             {StructureItem.None, "Не использовать"},
             {StructureItem.DateDay, "Дата: День (DD)"},
             {StructureItem.DateMonth, "Дата: Месяц (MM)"},
@@ -40,6 +42,15 @@ namespace PhotoArchivator
             CheckStart();
             CheckSctructure();
 
+            inputDirBox.Text = Properties.Settings.Default.inputDirectory;
+            outputDirBox.Text = Properties.Settings.Default.outputDirectory;
+
+        }
+        private Parameters GetParameters()
+        {
+            var structureItems = Enum.GetValues(typeof(StructureItem)).OfType<StructureItem>().ToArray();
+            var si = tableLayoutPanel1.Controls.OfType<ComboBox>().Select(cb => cb.SelectedIndex).Where(i => i >= 1).Select(i => structureItems[i]).ToArray();
+            return new Parameters { InputDir = inputDirBox.Text, OutputDir = outputDirBox.Text, StructureItems = si };
         }
         private void CheckSctructure()
         {
@@ -58,8 +69,8 @@ namespace PhotoArchivator
                 else c2.Enabled = true;
             }
         }
-    
-        
+
+
 
         private void CheckStart()
         {
@@ -83,7 +94,7 @@ namespace PhotoArchivator
             }
             else
             {
-                backgroundWorker.RunWorkerAsync();
+                backgroundWorker.RunWorkerAsync(GetParameters());
                 startButton.Text = "Стоп";
                 progressBar.Value = 0;
                 logBox.Items.Clear();
@@ -93,19 +104,52 @@ namespace PhotoArchivator
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            
-            for (int i = 0; i <= 100; i++)
+            if (e.Argument is Parameters parameters)
             {
-                if (backgroundWorker.CancellationPending) break;
-                backgroundWorker.ReportProgress(i, $"Строка номер {i}");
-                Thread.Sleep(200);
+                backgroundWorker.ReportProgress(0, "Поиск файлов...");
+                List<String> files = new List<string>();
+                FindFiles(parameters.InputDir, files);
+                backgroundWorker.ReportProgress(0, $" Найдено файлов: {files.Count}");
+                int i = 0;
+                foreach (var file in files)
+                {
+                    if (backgroundWorker.CancellationPending) return;
+                    backgroundWorker.ReportProgress((i / files.Count) * 100, $"Обработка файла {file}");
+                    ProcessFile(file, parameters);
+                    i++;
+                }
             }
+
+
+        }
+        private void FindFiles(string directory, List<String> files)
+        {
+            backgroundWorker.ReportProgress(0, $"Обрабатывется директория {directory}...");
+
+            foreach (var ext in PhotoFiles)
+            {
+                if (backgroundWorker.CancellationPending) return;
+                var fList = System.IO.Directory.GetFiles(directory, $"*.{ext}");
+                files.AddRange(fList);
+            }
+
+            var dList = System.IO.Directory.GetDirectories(directory);
+            foreach (var d in dList)
+            {
+                if (backgroundWorker.CancellationPending) return;
+                FindFiles(d, files);
+            }
+        }
+
+        private void ProcessFile(string path, Parameters parameters)
+        {
+
         }
 
         private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             progressBar.Value = e.ProgressPercentage;
-            if(e.UserState is string text)
+            if (e.UserState is string text)
             {
                 logBox.Items.Insert(0, text);
             }
@@ -147,10 +191,26 @@ namespace PhotoArchivator
         {
             CheckSctructure();
         }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Properties.Settings.Default.inputDirectory = inputDirBox.Text;
+            Properties.Settings.Default.outputDirectory = outputDirBox.Text;
+            Properties.Settings.Default.Save();
+
+        }
     }
 
     public enum StructureItem
     {
         None, DateYear, DateMonth, DateDay, DateYM, DateYMD, PhotoType, CameraCompany, CameraModel
+    }
+
+    public class Parameters
+    {
+        public string InputDir { get; set; }
+        public string OutputDir { get; set; }
+        public IEnumerable<StructureItem> StructureItems { get; set; }
+
     }
 }
