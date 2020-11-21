@@ -52,7 +52,7 @@ namespace PhotoArchivator
         {
             var structureItems = Enum.GetValues(typeof(StructureItem)).OfType<StructureItem>().ToArray();
             var si = tableLayoutPanel1.Controls.OfType<ComboBox>().Select(cb => cb.SelectedIndex).Where(i => i >= 1).Select(i => structureItems[i]).ToArray();
-            return new Parameters { InputDir = inputDirBox.Text, OutputDir = outputDirBox.Text, StructureItems = si };
+            return new Parameters { InputDir = inputDirBox.Text, OutputDir = outputDirBox.Text, StructureItems = si, Move = moveButton.Checked };
         }
         private void CheckSctructure()
         {
@@ -226,7 +226,7 @@ namespace PhotoArchivator
             }
             void FileCopy(string src, string dst)
             {
-                File.Copy(src, dst);
+                if (parameters.Move) File.Move(src, dst); else File.Copy(src, dst);
                 backgroundWorker.ReportProgress(-1, $"Файл {Path.GetFileName(src)} скопирован в каталог {Path.GetDirectoryName(dst)}");
             }
 
@@ -298,6 +298,7 @@ namespace PhotoArchivator
         public string InputDir { get; set; }
         public string OutputDir { get; set; }
         public IEnumerable<StructureItem> StructureItems { get; set; }
+        public bool Move { get; set; }
 
     }
 

@@ -29,11 +29,7 @@
         private void InitializeComponent()
         {
             this.inputGroupBox = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.jpgRawButton = new System.Windows.Forms.RadioButton();
-            this.rawButton = new System.Windows.Forms.RadioButton();
-            this.jpgButton = new System.Windows.Forms.RadioButton();
             this.inputDirButton = new System.Windows.Forms.Button();
             this.inputDirBox = new System.Windows.Forms.TextBox();
             this.outputGroupBox = new System.Windows.Forms.GroupBox();
@@ -55,6 +51,7 @@
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.statusBar = new System.Windows.Forms.ToolStripStatusLabel();
+            this.moveButton = new System.Windows.Forms.CheckBox();
             this.inputGroupBox.SuspendLayout();
             this.outputGroupBox.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -66,11 +63,8 @@
             // 
             this.inputGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.inputGroupBox.Controls.Add(this.label2);
+            this.inputGroupBox.Controls.Add(this.moveButton);
             this.inputGroupBox.Controls.Add(this.label1);
-            this.inputGroupBox.Controls.Add(this.jpgRawButton);
-            this.inputGroupBox.Controls.Add(this.rawButton);
-            this.inputGroupBox.Controls.Add(this.jpgButton);
             this.inputGroupBox.Controls.Add(this.inputDirButton);
             this.inputGroupBox.Controls.Add(this.inputDirBox);
             this.inputGroupBox.Location = new System.Drawing.Point(12, 12);
@@ -80,15 +74,6 @@
             this.inputGroupBox.TabStop = false;
             this.inputGroupBox.Text = "Откуда берем";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(25, 47);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(94, 13);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Тип фотографии:";
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -97,38 +82,6 @@
             this.label1.Size = new System.Drawing.Size(104, 13);
             this.label1.TabIndex = 5;
             this.label1.Text = "Исходный католог:";
-            // 
-            // jpgRawButton
-            // 
-            this.jpgRawButton.AutoSize = true;
-            this.jpgRawButton.Checked = true;
-            this.jpgRawButton.Location = new System.Drawing.Point(240, 45);
-            this.jpgRawButton.Name = "jpgRawButton";
-            this.jpgRawButton.Size = new System.Drawing.Size(90, 17);
-            this.jpgRawButton.TabIndex = 4;
-            this.jpgRawButton.TabStop = true;
-            this.jpgRawButton.Text = "JPEG + RAW";
-            this.jpgRawButton.UseVisualStyleBackColor = true;
-            // 
-            // rawButton
-            // 
-            this.rawButton.AutoSize = true;
-            this.rawButton.Location = new System.Drawing.Point(183, 45);
-            this.rawButton.Name = "rawButton";
-            this.rawButton.Size = new System.Drawing.Size(51, 17);
-            this.rawButton.TabIndex = 3;
-            this.rawButton.Text = "RAW";
-            this.rawButton.UseVisualStyleBackColor = true;
-            // 
-            // jpgButton
-            // 
-            this.jpgButton.AutoSize = true;
-            this.jpgButton.Location = new System.Drawing.Point(125, 45);
-            this.jpgButton.Name = "jpgButton";
-            this.jpgButton.Size = new System.Drawing.Size(52, 17);
-            this.jpgButton.TabIndex = 2;
-            this.jpgButton.Text = "JPEG";
-            this.jpgButton.UseVisualStyleBackColor = true;
             // 
             // inputDirButton
             // 
@@ -358,6 +311,16 @@
             this.statusBar.Spring = true;
             this.statusBar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // moveButton
+            // 
+            this.moveButton.AutoSize = true;
+            this.moveButton.Location = new System.Drawing.Point(125, 45);
+            this.moveButton.Name = "moveButton";
+            this.moveButton.Size = new System.Drawing.Size(205, 17);
+            this.moveButton.TabIndex = 6;
+            this.moveButton.Text = "Очистить каталог после обработки";
+            this.moveButton.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -391,11 +354,7 @@
         private System.Windows.Forms.TextBox inputDirBox;
         private System.Windows.Forms.GroupBox outputGroupBox;
         private System.Windows.Forms.GroupBox processGroupBox;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.RadioButton jpgRawButton;
-        private System.Windows.Forms.RadioButton rawButton;
-        private System.Windows.Forms.RadioButton jpgButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.ComboBox dir1Box;
         private System.Windows.Forms.ComboBox dir2Box;
@@ -413,6 +372,7 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel statusBar;
+        private System.Windows.Forms.CheckBox moveButton;
     }
 }
 
