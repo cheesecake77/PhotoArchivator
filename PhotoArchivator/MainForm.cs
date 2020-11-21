@@ -112,11 +112,11 @@ namespace PhotoArchivator
                 List<String> files = new List<string>();
                 FindFiles(parameters.InputDir, files);
                 backgroundWorker.ReportProgress(0, $" Найдено файлов: {files.Count}");
-                int i = 0;
+                double i = 0;
                 foreach (var file in files)
                 {
                     if (backgroundWorker.CancellationPending) return;
-                    backgroundWorker.ReportProgress((i / files.Count) * 100, $"Обработка файла {file}");
+                    backgroundWorker.ReportProgress((int)(i / files.Count * 100), $"Обработка файла {file}");
                     ProcessFile(file, parameters);
                     i++;
                 }
@@ -160,12 +160,82 @@ namespace PhotoArchivator
 
         private void ProcessFile(string path, Parameters parameters)
         {
-            var photo = Photo.GetPhoto(path);
+            try
+            {
+                var photo = Photo.GetPhoto(path);
+                var sb = new StringBuilder(parameters.OutputDir);
+                foreach (var i in parameters.StructureItems)
+                {
+                    switch (i)
+                    {
+                        case StructureItem.None:
+                            break;
+                        case StructureItem.DateYear:
+                            sb.Append($"\\{photo.ShotTime:yyyy}");
+                            break;
+                        case StructureItem.DateMonth:
+                            sb.Append($"\\{photo.ShotTime:MM}");
+                            break;
+                        case StructureItem.DateDay:
+                            sb.Append($"\\{photo.ShotTime:dd}");
+                            break;
+                        case StructureItem.DateYM:
+                            sb.Append($"\\{photo.ShotTime:yyyy-MM}");
+                            break;
+                        case StructureItem.DateYMD:
+                            sb.Append($"\\{photo.ShotTime:yyyy-MM-dd}");
+                            break;
+                        case StructureItem.PhotoType:
+                            sb.Append($"\\{(photo.IsRAW ? "Raw" : "NotRaw")}");
+                            break;
+                        case StructureItem.CameraCompany:
+                            sb.Append($"\\{(string.IsNullOrEmpty(photo.Make) ? "Unknown" : photo.Make)}");
+                            break;
+                        case StructureItem.CameraModel:
+                            sb.Append($"\\{(string.IsNullOrEmpty(photo.Model) ? "Unknown" : photo.Model)}");
+                            break;
+                    }
+                }
+                var destFile = Path.Combine(sb.ToString(), $"{photo.FileName}.{photo.Extension}");
+                System.IO.Directory.CreateDirectory(sb.ToString());
+                if (File.Exists(destFile))
+                {
+                    var destPhoto = Photo.GetPhoto(destFile);
+                    if (photo.ShotTime == destPhoto.ShotTime
+                        && photo.FileSize == destPhoto.FileSize
+                        && photo.HasGPS == destPhoto.HasGPS
+                        && photo.Make == destPhoto.Make
+                        && photo.Model == destPhoto.Model) backgroundWorker.ReportProgress(-1, $"Выходная директория уже содержит файл {photo.FileName}");
+                    else
+                    {
+                        int suf = 1;
+                        while (true)
+                        {
+                            destFile = Path.Combine(sb.ToString(), $"{photo.FileName}-{suf++}.{photo.Extension}");
+                            if (File.Exists(destFile)) continue;
+                            FileCopy(path, destFile);
+
+                        }
+                    }
+                }
+                else FileCopy(path, destFile);
+            }
+            catch (Exception error)
+            {
+                backgroundWorker.ReportProgress(-1, $"Ощибка при обработке файла {path}: {error.Message}");
+            }
+            void FileCopy(string src, string dst)
+            {
+                File.Copy(src, dst);
+                backgroundWorker.ReportProgress(-1, $"Файл {Path.GetFileName(src)} скопирован в каталог {Path.GetDirectoryName(dst)}");
+            }
+
         }
 
         private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            progressBar.Value = e.ProgressPercentage;
+            if (e.ProgressPercentage >= 0)
+                progressBar.Value = e.ProgressPercentage;
             if (e.UserState is string text)
             {
                 logBox.Items.Insert(0, text);
@@ -233,7 +303,7 @@ namespace PhotoArchivator
 
     public class Photo
     {
-        private static String[] RawFiles = { "arw", "dng", "nef", "crw", "cr2", "cr3" };
+        private static String[] RawFiles = { ".arw", ".dng", ".nef", ".crw", ".cr2", ".cr3" };
         public DateTime ShotTime { get; private set; }
         public bool HasGPS { get; private set; }
         public string Make { get; private set; }
@@ -250,43 +320,19 @@ namespace PhotoArchivator
             var exifDirectory = directories.OfType<MetadataExtractor.Formats.Exif.ExifIfd0Directory>().FirstOrDefault();
             var gpsDirectory = directories.OfType<MetadataExtractor.Formats.Exif.GpsDirectory>().FirstOrDefault();
             var fileDirecory = directories.OfType<MetadataExtractor.Formats.FileSystem.FileMetadataDirectory>().FirstOrDefault();
-
             HasGPS = gpsDirectory != null;
-
-
             if (exifDirectory != null)
-
             {
-                var makeTag = exifDirectory.Tags.FirstOrDefault(t => t.Name == "Make");
-                var modelTag = exifDirectory.Tags.FirstOrDefault(t => t.Name == "Model");
-                var dateTimeTag = exifDirectory.Tags.FirstOrDefault(t => t.Name == "Date/Time");
                 IsRAW = RawFiles.Contains(System.IO.Path.GetExtension(path).ToLower());
-                if (makeTag != null && makeTag.Description != null)
-                {
-                    Make = makeTag.Description;
-                }
 
-                if (dateTimeTag != null && dateTimeTag.Description != null)
-                {
-                    //if (DateTime.TryParseExact(dateTimeTag.Description, "yyyy:MM:dd HH:mm:ss", CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime t))
-                    //{
-                    //    ShotTime = t;
-                    //}
-                    ShotTime = exifDirectory.GetDateTime(306);
-                }
-
-                if (makeTag != null && makeTag.Description != null)
-                {
-                    Make = makeTag.Description;
-                }
-
-
-
+                Make = exifDirectory.GetString(271);
+                ShotTime = exifDirectory.GetDateTime(306);
+                Model = exifDirectory.GetString(272);
             }
 
             if (fileDirecory != null)
             {
-                
+
                 FileSize = fileDirecory.GetInt64(2);
             }
 
